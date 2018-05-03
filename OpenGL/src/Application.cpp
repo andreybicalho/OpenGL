@@ -9,18 +9,18 @@
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCall(x) GLClearError();\
 	x;\
-	ASSERT(GLLogCall())
+	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
 static void GLClearError()
 {
 	while (glGetError() != GL_NO_ERROR);
 }
 
-static bool GLLogCall()
+static bool GLLogCall(const char* function, const char* file, int line)
 {
 	while (GLenum error = glGetError())
 	{		
-		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
+		std::cout << "[OpenGL Error] (" << error << "): " << function << " " << file << ":" << line << std::endl;
 		return false;
 	}
 
@@ -155,13 +155,13 @@ int main(void)
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
 	unsigned int ibo;
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(int), indices, GL_STATIC_DRAW);
+	GLCall(glGenBuffers(1, &ibo));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(int), indices, GL_STATIC_DRAW));
 
 	ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");	
 	unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
-	glUseProgram(shader);
+	GLCall(glUseProgram(shader));
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
