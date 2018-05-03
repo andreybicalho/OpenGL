@@ -7,6 +7,9 @@
 #include <sstream>
 
 #define ASSERT(x) if (!(x)) __debugbreak();
+#define GLCall(x) GLClearError();\
+	x;\
+	ASSERT(GLLogCall())
 
 static void GLClearError()
 {
@@ -168,9 +171,7 @@ int main(void)
 
 
 		// how to find errors in OpenGL
-		GLClearError(); // clear all errors
-		glDrawElements(GL_TRIANGLES, 6, GL_INT, nullptr); // call the desired OpenGL function (we know we passed an invalid enum = GL_INT)
-		ASSERT(GLLogCall());
+		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_INT, nullptr));
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
