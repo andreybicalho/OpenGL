@@ -6,6 +6,20 @@
 #include <string>
 #include <sstream>
 
+static void GLClearError()
+{
+	while (glGetError() != GL_NO_ERROR);
+}
+
+static void GLCheckError()
+{
+	while (GLenum error = glGetError())
+	{
+		// put a break point here and get the hexadecimal value of error
+		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
+	}
+}
+
 struct ShaderProgramSource
 {
 	std::string VertexSource;
@@ -148,7 +162,11 @@ int main(void)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		// how to find errors in OpenGL
+		GLClearError(); // clear all errors
+		glDrawElements(GL_TRIANGLES, 6, GL_INT, nullptr); // call the desired OpenGL function (we know we passed an invalid enum = GL_INT)
+		GLCheckError(); // check for errors, put a breakpoint in GLCheckError and you will find the error code in hexa = 0x0500, go to the glew.h file and search for 0x0500 and you will find the answer: GL_INVALID_ENUM 0x0500. Ok we found it is an invalid enum...
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
