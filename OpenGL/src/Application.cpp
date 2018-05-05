@@ -159,7 +159,7 @@ int main(void)
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
 		// create and bind our index buffer object
-		IndexBuffer ib(indices, 6 * sizeof(int));
+		IndexBuffer ib(indices, 6);
 
 		ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
 		unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
