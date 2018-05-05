@@ -1,5 +1,5 @@
 /*
- Pipeline for draw things:
+ Pipeline for drawing things:
  1 - bind our shader
  2 - bind our vertex buffer
  3 - setup our vertex layout (memory layout)
@@ -149,10 +149,9 @@ int main(void)
 			2, 3, 0
 		};
 
-		unsigned int vao;
-		GLCall(glGenVertexArrays(1, &vao));
-		GLCall(glBindVertexArray(vao));
-		
+
+
+
 
 		VertexArray va;
 		VertexBuffer vb(positions, 4 * 2 * sizeof(float));
@@ -162,6 +161,11 @@ int main(void)
 		va.AddBuffer(vb, layout);
 		
 		IndexBuffer ib(indices, 6);
+
+
+
+
+
 
 		ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
 		unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
