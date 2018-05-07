@@ -1,13 +1,3 @@
-/*
- Pipeline for drawing things:
- 1 - bind our shader
- 2 - bind our vertex buffer
- 3 - setup our vertex layout (memory layout)
- 4 - bind our index buffer
- 5 - call our draw call
-*/
-
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -18,6 +8,7 @@
 
 #include "Renderer.h"
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
@@ -32,6 +23,7 @@ int main(void)
 	if (!glfwInit())
 		return -1;	
 
+	// enforcing opengl version
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -47,14 +39,18 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
+	// screen updates (vsync) higher values means lower refresh hates
 	glfwSwapInterval(1);
 
 	if (glewInit() != GLEW_OK)
 		std::cout << "Error!" << std::endl;
 
+	// opengl version
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
+
 	{
+		// points in space
 		float positions[] = {
 			-0.5f, -0.5f, // 0 
 			 0.5f, -0.5f, // 1
@@ -62,34 +58,43 @@ int main(void)
 			-0.5f,  0.5f  // 3
 		};
 
+		// indexes to draw a triangle from positions points
 		unsigned int indices[] = {
-			0, 1, 2,
-			2, 3, 0
+			0, 1, 2, // one triangle (positions[0], positions[1], positions[2])
+			2, 3, 0 // another triangle (positions[2], positions[3], positions[0])
 		};
 
 
 
+		/*
+		Pipeline for drawing things:
+		1 - bind our vertex buffer
+		2 - setup our vertex layout (memory layout)
+		3 - bind our index buffer
+		4 - bind our shader
+		5 - call our draw call
+		*/
 
-
-		VertexArray va;
-		VertexBuffer vb(positions, 4 * 2 * sizeof(float));
-
+		VertexBuffer vb(positions, 4 * 2 * sizeof(float)); // 4 points in space represented by 2 values of float size
 		VertexBufferLayout layout;
-		layout.Push<float>(2);
+		layout.Push<float>(2); // 2 values of float size
+		
+		VertexArray va;
 		va.AddBuffer(vb, layout);
 		
-		IndexBuffer ib(indices, 6);
-
+		IndexBuffer ib(indices, 6); // 6 points in space (two triangles)
 
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
-		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
+		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f); // our parameter in the shader program
 
 		// clearing everything
 		va.Unbind();
-		shader.Unbind();
 		vb.Unbind();
 		ib.Unbind();		
+		shader.Unbind();
+
+		Renderer renderer; // our renderer
 
 		float r = 0.0f;
 		float increment = 0.05f;
@@ -97,22 +102,26 @@ int main(void)
 		while (!glfwWindowShouldClose(window))
 		{
 			/* Render here */
-			glClear(GL_COLOR_BUFFER_BIT);
+			renderer.Clear();
 
 			shader.Bind();
 			shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
 
-			va.Bind();
-			ib.Bind();
+			renderer.Draw(va, ib, shader);
 
-			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
+
+			// blink color
 			if (r > 1.0f)
 				increment = -0.05f;
 			else if (r < 0.0f)
 				increment = 0.05f;
 
 			r += increment;
+
+
+
+
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
