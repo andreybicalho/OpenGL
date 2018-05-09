@@ -14,6 +14,8 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 
 int main(void)
@@ -51,7 +53,7 @@ int main(void)
 
 
 	{
-		// points in space
+		// points in space (our vertices)
 		float positions[] = {
 			-0.5f, -0.5f, 0.0f, 0.0f,  // 0 -- bottom left
 			 0.5f, -0.5f, 1.0f, 0.0f,  // 1
@@ -88,6 +90,9 @@ int main(void)
 		va.AddBuffer(vb, layout);
 		
 		IndexBuffer ib(indices, 6); // 6 points in space (two triangles)
+		
+		// NOTE(andrey): glm::ortho(left edge, right edge, bottom edge, upper edge, near plane, far plane);
+		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f); // 4/3 aspect ratio (-2.0f, 2.0f, -1.5f, 1.5f) * 2 = 4/3
 
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
@@ -96,6 +101,7 @@ int main(void)
 		Texture texture("res/textures/opengl_logo.png");
 		texture.Bind();
 		shader.SetUniform1i("u_Texture", 0); // second parameter '0' has to match the slot we bound our texture (if we bind to slot 2: texture.Bind(2); we should pass 2 here)
+		shader.SetUniformMat4f("u_MVP", proj);
 
 		// clearing everything
 		va.Unbind();
