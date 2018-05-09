@@ -12,6 +12,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Texture.h"
 
 
 
@@ -52,10 +53,10 @@ int main(void)
 	{
 		// points in space
 		float positions[] = {
-			-0.5f, -0.5f, // 0 
-			 0.5f, -0.5f, // 1
-			 0.5f,  0.5f, // 2
-			-0.5f,  0.5f  // 3
+			-0.5f, -0.5f, 0.0f, 0.0f,  // 0 -- bottom left
+			 0.5f, -0.5f, 1.0f, 0.0f,  // 1
+			 0.5f,  0.5f, 1.0f, 1.0f,  // 2
+			-0.5f,  0.5f, 0.0f, 1.0f   // 3
 		};
 
 		// indexes to draw a triangle from positions points
@@ -75,10 +76,14 @@ int main(void)
 		5 - call our draw call
 		*/
 
-		VertexBuffer vb(positions, 4 * 2 * sizeof(float)); // 4 points in space represented by 2 values of float size
+		VertexBuffer vb(positions, 4 * 4 * sizeof(float)); // 4 points in space represented by 4 values of float size (4 floats per vertex)
 		VertexBufferLayout layout;
 		layout.Push<float>(2); // 2 values of float size
+		layout.Push<float>(2); // for our texture
 		
+		GLCall(glEnable(GL_BLEND)); // enabling transparency
+		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
 		VertexArray va;
 		va.AddBuffer(vb, layout);
 		
@@ -87,6 +92,10 @@ int main(void)
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
 		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f); // our parameter in the shader program
+
+		Texture texture("res/textures/opengl_logo.png");
+		texture.Bind();
+		shader.SetUniform1i("u_Texture", 0); // second parameter '0' has to match the slot we bound our texture (if we bind to slot 2: texture.Bind(2); we should pass 2 here)
 
 		// clearing everything
 		va.Unbind();
