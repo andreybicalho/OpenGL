@@ -32,7 +32,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -55,10 +55,10 @@ int main(void)
 	{
 		// points in space (our vertices)
 		float positions[] = {
-			-0.5f, -0.5f, 0.0f, 0.0f,  // 0 -- bottom left
-			 0.5f, -0.5f, 1.0f, 0.0f,  // 1
-			 0.5f,  0.5f, 1.0f, 1.0f,  // 2
-			-0.5f,  0.5f, 0.0f, 1.0f   // 3
+			100.f, 100.f, 0.0f, 0.0f,  // 0 -- bottom left
+			200.f, 100.f, 1.0f, 0.0f,  // 1
+			200.f, 200.f, 1.0f, 1.0f,  // 2
+			100.f, 200.f, 0.0f, 1.0f   // 3
 		};
 
 		// indexes to draw a triangle from positions points
@@ -92,7 +92,8 @@ int main(void)
 		IndexBuffer ib(indices, 6); // 6 points in space (two triangles)
 		
 		// NOTE(andrey): glm::ortho(left edge, right edge, bottom edge, upper edge, near plane, far plane);
-		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f); // 4/3 aspect ratio (-2.0f, 2.0f, -1.5f, 1.5f) * 2 = 4/3
+		//glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f); // 4/3 aspect ratio (-2.0f, 2.0f, -1.5f, 1.5f) * 2 = 4/3
+		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.f, -1.0f, 1.0f); 
 
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
