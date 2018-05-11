@@ -94,6 +94,9 @@ int main(void)
 		// NOTE(andrey): glm::ortho(left edge, right edge, bottom edge, upper edge, near plane, far plane);
 		//glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f); // 4/3 aspect ratio (-2.0f, 2.0f, -1.5f, 1.5f) * 2 = 4/3
 		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.f, -1.0f, 1.0f); 
+		
+		glm::vec4 vp(100.f, 100.f, 0.f, 1.f);
+		glm::vec4 result = proj * vp; // x and y of would be in the -1 and 1 space
 
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
