@@ -93,7 +93,9 @@ int main(void)
 		
 		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.f, -1.0f, 1.0f); 
 		glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(-100, 0, 0));
-		glm::mat4 mvp = proj * view;
+		glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(200, 200, 0));
+		
+		glm::mat4 mvp = proj * view * model; // multiplication must be pvm and not mpv
 		
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
