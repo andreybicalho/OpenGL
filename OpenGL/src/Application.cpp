@@ -98,8 +98,6 @@ int main(void)
 		
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
-		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f); // our parameter in the shader program
-		
 
 		Texture texture("res/textures/opengl_logo.png");
 		texture.Bind();
@@ -135,7 +133,6 @@ int main(void)
 			glm::mat4 mvp = proj * view * model;
 
 			shader.Bind();
-			shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
 			shader.SetUniformMat4f("u_MVP", mvp);
 
 			renderer.Draw(va, ib, shader);
