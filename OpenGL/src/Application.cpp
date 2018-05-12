@@ -139,16 +139,6 @@ int main(void)
 
 
 
-			// blink color
-			if (r > 1.0f)
-				increment = -0.05f;
-			else if (r < 0.0f)
-				increment = 0.05f;
-
-			r += increment;
-
-
-
 			{
 				ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
