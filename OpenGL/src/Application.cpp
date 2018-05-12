@@ -55,12 +55,12 @@ int main(void)
 
 
 	{
-		// points in space (our vertices)
+		// points in space (our vertices and also our texture coordinates)
 		float positions[] = {
-			100.f, 100.f, 0.0f, 0.0f,  // 0 
-			200.f, 100.f, 1.0f, 0.0f,  // 1
-			200.f, 200.f, 1.0f, 1.0f,  // 2
-			100.f, 200.f, 0.0f, 1.0f   // 3
+			-50.f, -50.f, 0.0f, 0.0f,  // 0 
+			 50.f, -50.f, 1.0f, 0.0f,  // 1
+			 50.f,  50.f, 1.0f, 1.0f,  // 2
+			-50.f,  50.f, 0.0f, 1.0f   // 3
 		};
 
 		// indexes to draw a triangle from positions points
@@ -94,7 +94,7 @@ int main(void)
 		IndexBuffer ib(indices, 6); // 6 points in space (two triangles forming a square)
 		
 		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.f, -1.0f, 1.0f); 
-		glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(-100, 0, 0));
+		glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0));
 		
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();

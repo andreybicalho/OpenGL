@@ -113,7 +113,8 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 	{
 		int length;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char *)alloca(length * sizeof(char)); // hack for: char message[length]; this will be allocated on the stack and not in the heap like "new" operator does.
+		// NOTE(andrey): hack for char message[length]; this will be allocated on the stack and not in the heap like "new" operator does.
+		char* message = (char *)alloca(length * sizeof(char));
 		glGetShaderInfoLog(id, length, &length, message);
 		std::cout << "Failed to compile "
 			<< (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
@@ -135,7 +136,7 @@ int Shader::GetUniformLocation(const std::string& name)
 
 	GLCall(int location = glGetUniformLocation(RendererID, name.c_str()));
 	if (location == -1)
-		std::cout << "Warning: uniform '" << name << "1 doesn't exist!" << std::endl;
+		std::cout << "Warning: uniform '" << name << " doesn't exist!" << std::endl;
 	
 	UniformLocationCache[name] = location;
 
