@@ -116,7 +116,8 @@ int main(void)
 		ImGui_ImplGlfwGL3_Init(window, true);
 		ImGui::StyleColorsDark();
 
-		glm::vec3 translation(200, 200, 0);
+		glm::vec3 translationA(200, 200, 0);
+		glm::vec3 translationB(400, 200, 0);
 
 
 		float r = 0.0f;
@@ -129,18 +130,32 @@ int main(void)
 
 			ImGui_ImplGlfwGL3_NewFrame();
 
-			glm::mat4 model = glm::translate(glm::mat4(1.f),translation);
-			glm::mat4 mvp = proj * view * model;
+			// first logo
+			{
+				glm::mat4 model = glm::translate(glm::mat4(1.f),translationA);
+				glm::mat4 mvp = proj * view * model;
+				shader.Bind(); // NOTE(andrey): we need bind it once since Draw() will bind things also, so it would be waist of performance
+				shader.SetUniformMat4f("u_MVP", mvp);
 
-			shader.Bind();
-			shader.SetUniformMat4f("u_MVP", mvp);
+				renderer.Draw(va, ib, shader);
+			}
 
-			renderer.Draw(va, ib, shader);
+			// second logo
+			{
+				glm::mat4 model = glm::translate(glm::mat4(1.f), translationB);
+				glm::mat4 mvp = proj * view * model;
+				shader.SetUniformMat4f("u_MVP", mvp);
+
+				renderer.Draw(va, ib, shader);
+			}
+
 
 
 
 			{
-				ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);
+				ImGui::SliderFloat3("TranslationA", &translationA.x, 0.0f, 960.0f);
+				ImGui::SliderFloat3("TranslationB", &translationB.x, 0.0f, 960.0f);
+
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}
 
