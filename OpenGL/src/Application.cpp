@@ -7,7 +7,12 @@ Pipeline for drawing things:
 5 - call our draw call
 */
 
+/* The OpenGL Extension Wrangler (GLEW) is used to access the modern OpenGL API functions. */
 #include <GL/glew.h>
+
+/* GLFW will allow us to create a window, and receive mouse and keyboard input in a cross-platform way. 
+ * OpenGL does not handle window creation or input, so we have to use these library for handling window, keyboard, mouse, joysticks, input and other purpose. 
+ */
 #include <GLFW/glfw3.h>
 
 #include <iostream>
