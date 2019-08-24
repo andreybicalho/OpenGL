@@ -10,8 +10,8 @@
 Shader::Shader(const std::string& filepath)
 	: FilePath(filepath), RendererID(0)
 {
-	ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
-	RendererID = CreateShader(source.VertexSource, source.FragmentSource);
+	auto[vertexSource, fragmentSource] = ParseShader("res/shaders/Basic.shader");
+	RendererID = CreateShader(vertexSource, fragmentSource);
 }
 
 Shader::~Shader()
@@ -49,7 +49,7 @@ void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix)
 	GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 }
 
-ShaderProgramSource Shader::ParseShader(const std::string& filepath)
+std::tuple<std::string, std::string> Shader::ParseShader(const std::string& filepath)
 {
 	std::ifstream stream(filepath);
 
